@@ -34,7 +34,6 @@
 
     <div class="buttons">
       <a class="btn" href="camera.tex"><span class="ico">&#128196;</span> Paper</a>
-      <a class="btn" href="supp.tex"><span class="ico">&#128209;</span> Supplement</a>
       <span class="btn disabled" aria-disabled="true"><span class="ico">&lt;/&gt;</span> Code (Coming Soon)</span>
     </div>
   </header>
@@ -110,15 +109,6 @@
           gate, preserving single-condition behavior while enabling compositional control.</p>
         </div>
       </div>
-
-      <figure class="plain">
-        <img loading="lazy" src="assets/saci_web.png" alt="Effect of SACI on injected control features" data-full="assets/saci_web.png">
-        <figcaption>
-          <b>Effect of SACI.</b> From left to right: original image, input condition, the Sobel structure
-          map, the injected feature without SACI, and the structure-modulated feature with SACI. SACI
-          strengthens the injected control response around boundaries and local discontinuities.
-        </figcaption>
-      </figure>
     </section>
 
     <!-- ===== Results ===== -->
@@ -173,25 +163,6 @@
     <!-- ===== Supplement ===== -->
     <section>
       <h2 class="h2">Supplementary</h2>
-      <div class="grid-2">
-        <figure class="plain">
-          <img loading="lazy" src="assets/supp_1_web.png" alt="Condition encoder" data-full="assets/supp_1_web.png">
-          <figcaption><b>Condition encoder.</b> Each depth/segmentation/edge branch shares this
-          architecture with independent parameters.</figcaption>
-        </figure>
-        <figure class="plain">
-          <img loading="lazy" src="assets/supp_2_web.png" alt="Residual adapter" data-full="assets/supp_2_web.png">
-          <figcaption><b>Structure-aware residual adapter</b> used at each injection layer, with a
-          zero-initialized projection and learnable gate.</figcaption>
-        </figure>
-      </div>
-
-      <figure>
-        <img loading="lazy" src="images/yolo.jpg" alt="YOLO26 object filtering motivation" data-full="images/yolo.jpg">
-        <figcaption><b>Region-aware benchmark.</b> YOLO26 provides clean, condition-grounded object
-        proposals, avoiding incidental RGB textures that are not represented by the control signal.</figcaption>
-      </figure>
-
       <div class="grid-2">
         <figure>
           <img loading="lazy" src="images/supp_depth.png" alt="Additional depth comparisons" data-full="images/supp_depth.png">
