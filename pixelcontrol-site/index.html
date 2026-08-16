@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PixelControl: Fine-Grained Condition Fidelity in Text-to-Image Diffusion.">
+  <meta property="og:title" content="PixelControl: Fine-Grained Condition Fidelity in Text-to-Image Diffusion">
+  <meta property="og:image" content="assets/teaser_new_web.png">
+  <title>PixelControl</title>
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body id="top">
+
+  <!-- ===== Hero ===== -->
+  <header class="hero">
+    <p class="venue">arXiv Preprint</p>
+    <h1 class="title">PixelControl: Fine-Grained Condition Fidelity in Text-to-Image Diffusion</h1>
+
+    <div class="authors">
+      <span>Xin Lin<sup>1</sup></span>
+      <span>Haodong Li<sup>1</sup></span>
+      <span>Zhifei Zhang<sup>2</sup></span>
+      <span>Yutong Yang<sup>1</sup></span>
+      <span>Haitian Zheng<sup>2</sup></span>
+      <span>Juanxi Tian<sup>3</sup></span>
+      <span>Zhe Lin<sup>2</sup></span>
+      <span>Truong Nguyen<sup>1</sup></span>
+    </div>
+    <div class="affil">
+      <span><sup>1</sup>University of California, San Diego</span>
+      <span><sup>2</sup>Adobe Research</span>
+      <span><sup>3</sup>Nanyang Technological University</span>
+    </div>
+
+    <div class="buttons">
+      <a class="btn" href="camera.tex"><span class="ico">&#128196;</span> Paper</a>
+      <a class="btn" href="supp.tex"><span class="ico">&#128209;</span> Supplement</a>
+      <span class="btn disabled" aria-disabled="true"><span class="ico">&lt;/&gt;</span> Code (Coming Soon)</span>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ===== Teaser ===== -->
+    <figure class="teaser">
+      <img src="assets/teaser_new_web.png" alt="PixelControl teaser: fine-grained depth, segmentation and edge fidelity" data-full="assets/teaser_new_web.png">
+      <figcaption>
+        <b>Motivation for fine-grained condition fidelity.</b>
+        (a) Existing methods can match coarse segmentation regions but drift around boundaries.
+        (b) They can preserve global depth layout while omitting small conditioned regions.
+        (c) Across depth, segmentation, and edge metrics, our <b>PixelControl</b> achieves stronger
+        structural fidelity while maintaining high visual quality.
+      </figcaption>
+    </figure>
+
+    <!-- ===== Abstract ===== -->
+    <section class="abstract">
+      <h2 class="h2">Abstract</h2>
+      <p>
+        Controllable text-to-image diffusion models can often follow the global layout of spatial
+        conditions, yet still violate fine-grained structures such as object boundaries, thin contours,
+        and medium/small conditioned regions. This limitation is especially problematic for VAE-based
+        latent diffusion, where spatial compression can weaken high-frequency and low-area condition
+        signals. We propose <b>PixelControl</b>, a pixel-space controllable diffusion framework for
+        fine-grained condition fidelity. Built on a PixelDiT-style backbone, PixelControl avoids the
+        latent bottleneck and introduces two complementary designs. First, <b>Structure-Aware Control
+        Injection</b> derives a condition structure map and uses it to strengthen injected control
+        residuals around spatially sensitive regions. Second, <b>Multi-Scale Pyramid Cycle Loss</b>
+        verifies generated images against condition-derived structures across multiple resolutions,
+        balancing global layout consistency with local boundary and detail accuracy. PixelControl
+        supports depth, segmentation, edge, and their combinations through modality-specific control
+        branches with lightweight gated fusion. Experiments across depth, segmentation, and edge control
+        show that PixelControl improves structural fidelity and visual quality over existing controllable
+        generation methods, with especially strong gains on boundaries and medium/small conditioned regions.
+      </p>
+    </section>
+
+    <!-- ===== Method ===== -->
+    <section>
+      <h2 class="h2">Method</h2>
+      <figure class="plain">
+        <img loading="lazy" src="assets/method_web.png" alt="Overview of the PixelControl architecture" data-full="assets/method_web.png">
+        <figcaption>
+          <b>Overview of PixelControl.</b> The condition is injected into a frozen PixelDiT backbone
+          through structure-aware residual modulation, and the model is trained with flow matching and
+          multi-scale cycle supervision to preserve both global layout and fine condition details.
+        </figcaption>
+      </figure>
+
+      <div class="cards">
+        <div class="card">
+          <h3>Pixel-space backbone</h3>
+          <p>Denoising happens directly in pixel space on a PixelDiT-T2I generator, avoiding the VAE
+          latent bottleneck that attenuates sharp boundaries and low-area structures.</p>
+        </div>
+        <div class="card">
+          <h3>Structure-Aware Control Injection (SACI)</h3>
+          <p>A Sobel structure map derived from the condition modulates the injected residual,
+          strengthening control around boundaries and local discontinuities without changing the
+          pretrained backbone.</p>
+        </div>
+        <div class="card">
+          <h3>Multi-Scale Pyramid Cycle Loss (MPCL)</h3>
+          <p>Generated images are re-verified against condition-derived structures at 512/256/128/64,
+          with coarse scales enforcing layout and fine scales enforcing boundary and detail accuracy.</p>
+        </div>
+        <div class="card">
+          <h3>Gated multi-condition control</h3>
+          <p>Independent depth, segmentation, and edge branches are fused by a lightweight layer-wise
+          gate, preserving single-condition behavior while enabling compositional control.</p>
+        </div>
+      </div>
+
+      <figure class="plain">
+        <img loading="lazy" src="assets/saci_web.png" alt="Effect of SACI on injected control features" data-full="assets/saci_web.png">
+        <figcaption>
+          <b>Effect of SACI.</b> From left to right: original image, input condition, the Sobel structure
+          map, the injected feature without SACI, and the structure-modulated feature with SACI. SACI
+          strengthens the injected control response around boundaries and local discontinuities.
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ===== Results ===== -->
+    <section>
+      <h2 class="h2">Results</h2>
+      <p class="lead" style="text-align:center;max-width:820px;margin:0 auto 26px;color:var(--muted)">
+        PixelControl consistently improves structural fidelity across depth, segmentation, and edge
+        control, with the largest gains on boundaries and non-large conditioned regions &mdash; while
+        also achieving the best image quality (FID).
+      </p>
+
+      <div class="table-scroll">
+        <table>
+          <caption>Structural fidelity and non-large region accuracy. PixelControl vs. the strongest baseline per metric.</caption>
+          <thead>
+            <tr><th>Setting</th><th>Metric</th><th>Best baseline</th><th>PixelControl</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Depth</td><td>AbsRel &darr;</td><td>0.1949</td><td>0.1434</td></tr>
+            <tr><td>Segmentation</td><td>Boundary-F1 &uarr;</td><td>0.5061</td><td>0.6973</td></tr>
+            <tr><td>Edge</td><td>Chamfer &darr;</td><td>11.53</td><td>5.456</td></tr>
+            <tr><td>Non-large depth</td><td>AbsRel &darr;</td><td>0.2727</td><td>0.1419</td></tr>
+            <tr><td>Non-large edge</td><td>Chamfer &darr;</td><td>4.381</td><td>2.603</td></tr>
+            <tr class="ours"><td>Non-large seg.</td><td>Boundary-F1 &uarr;</td><td>0.4728</td><td>0.6409</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure>
+        <img loading="lazy" src="images/comparison_1.png" alt="Single-condition qualitative comparison" data-full="images/comparison_1.png">
+        <figcaption>
+          <b>Single-condition qualitative comparison</b> across depth, edge, and segmentation controls.
+          For each example we show the input condition, generated images from all methods, and the
+          re-estimated maps used for closed-loop verification.
+        </figcaption>
+      </figure>
+
+      <div class="grid-2">
+        <figure>
+          <img loading="lazy" src="images/comparison_3.png" alt="Non-large conditioned-region comparison" data-full="images/comparison_3.png">
+          <figcaption><b>Non-large conditioned regions.</b> Red boxes highlight small/medium structures
+          specified by the condition; PixelControl preserves them while keeping global structure.</figcaption>
+        </figure>
+        <figure>
+          <img loading="lazy" src="images/comparison_2.png" alt="Depth + edge multi-condition comparison" data-full="images/comparison_2.png">
+          <figcaption><b>Depth + edge multi-condition control.</b> PixelControl follows global geometry
+          from depth while respecting edge-specified contours, satisfying both active controls.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ===== Supplement ===== -->
+    <section>
+      <h2 class="h2">Supplementary</h2>
+      <div class="grid-2">
+        <figure class="plain">
+          <img loading="lazy" src="assets/supp_1_web.png" alt="Condition encoder" data-full="assets/supp_1_web.png">
+          <figcaption><b>Condition encoder.</b> Each depth/segmentation/edge branch shares this
+          architecture with independent parameters.</figcaption>
+        </figure>
+        <figure class="plain">
+          <img loading="lazy" src="assets/supp_2_web.png" alt="Residual adapter" data-full="assets/supp_2_web.png">
+          <figcaption><b>Structure-aware residual adapter</b> used at each injection layer, with a
+          zero-initialized projection and learnable gate.</figcaption>
+        </figure>
+      </div>
+
+      <figure>
+        <img loading="lazy" src="images/yolo.jpg" alt="YOLO26 object filtering motivation" data-full="images/yolo.jpg">
+        <figcaption><b>Region-aware benchmark.</b> YOLO26 provides clean, condition-grounded object
+        proposals, avoiding incidental RGB textures that are not represented by the control signal.</figcaption>
+      </figure>
+
+      <div class="grid-2">
+        <figure>
+          <img loading="lazy" src="images/supp_depth.png" alt="Additional depth comparisons" data-full="images/supp_depth.png">
+          <figcaption><b>Additional depth-control comparisons.</b></figcaption>
+        </figure>
+        <figure>
+          <img loading="lazy" src="images/supp_seg.png" alt="Additional segmentation comparisons" data-full="images/supp_seg.png">
+          <figcaption><b>Additional segmentation-control comparisons.</b></figcaption>
+        </figure>
+      </div>
+      <figure>
+        <img loading="lazy" src="images/supp_edge.png" alt="Additional edge comparisons" data-full="images/supp_edge.png">
+        <figcaption><b>Additional edge-control comparisons.</b></figcaption>
+      </figure>
+    </section>
+
+    <!-- ===== Citation ===== -->
+    <section>
+      <h2 class="h2">BibTeX</h2>
+      <pre class="bibtex"><code>@article{lin2025pixelcontrol,
+  title   = {PixelControl: Fine-Grained Condition Fidelity in Text-to-Image Diffusion},
+  author  = {Lin, Xin and Li, Haodong and Zhang, Zhifei and Yang, Yutong and
+             Zheng, Haitian and Tian, Juanxi and Lin, Zhe and Nguyen, Truong},
+  journal = {arXiv preprint},
+  year    = {2025}
+}</code></pre>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>PixelControl &nbsp;|&nbsp; <a href="#top">Back to top</a></p>
+    <p style="margin-top:8px">Page template inspired by the academic project-page style. Code will be released here.</p>
+  </footer>
+
+  <!-- ===== Lightbox ===== -->
+  <div class="lightbox" hidden>
+    <button class="lightbox-close" type="button">Close</button>
+    <img src="" alt="Expanded figure">
+  </div>
+
+  <script src="assets/site.js"></script>
+</body>
+</html>
